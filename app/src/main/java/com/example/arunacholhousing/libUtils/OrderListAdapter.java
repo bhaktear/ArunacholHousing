@@ -1,5 +1,5 @@
 package com.example.arunacholhousing.libUtils;
-
+/*
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +47,8 @@ public class OrderListAdapter extends ArrayAdapter<OrderItem>{
         textStatus.setText("Status: " + orderItem.getStatus());
         //addStatus.setTag(orderItem.getInvoice());
 
+ */
+
         /*
         addStatus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,9 +59,12 @@ public class OrderListAdapter extends ArrayAdapter<OrderItem>{
         });
 
          */
-
+/*
         return convertView;
     }
 }
+
+ */
+
 
 

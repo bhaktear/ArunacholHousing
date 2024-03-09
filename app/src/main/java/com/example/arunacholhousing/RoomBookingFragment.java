@@ -1,58 +1,34 @@
 package com.example.arunacholhousing;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.viewmodel.CreationExtras;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.DatePicker;
+import android.widget.EditText;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RoomBookingFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class RoomBookingFragment extends Fragment {
+import com.example.arunacholhousing.libUtils.DatePickerFragment;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+public class RoomBookingFragment extends Fragment implements DatePickerFragment.OnDateSetListener {
+    private final Calendar selectedDate = Calendar.getInstance();
+    private EditText checkInDate, checkoutDate;
+    private boolean datePicker1ShownOnce = false;
+    private boolean datePicker2ShownOnce = false;
+    private EditText selectedEditText;
     public RoomBookingFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RoomBookingFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RoomBookingFragment newInstance(String param1, String param2) {
-        RoomBookingFragment fragment = new RoomBookingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -61,4 +37,85 @@ public class RoomBookingFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_room_booking, container, false);
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        checkInDate = view.findViewById(R.id.checkInDate);
+        checkoutDate = view.findViewById(R.id.checkOutDate);
+        checkInDate.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && !datePicker1ShownOnce) {
+                selectedEditText = checkInDate;
+                showDatePickerDialog(checkInDate);
+                hideKeyboard();
+                datePicker1ShownOnce = true;
+            }
+        });
+        checkInDate.setOnClickListener(v -> {
+            selectedEditText = checkInDate;
+            showDatePickerDialog(checkInDate);
+            hideKeyboard();
+        });
+
+        checkoutDate = view.findViewById(R.id.checkOutDate);
+        checkoutDate.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && !datePicker2ShownOnce) {
+                selectedEditText = checkoutDate;
+                showDatePickerDialog(checkoutDate);
+                hideKeyboard();
+                datePicker2ShownOnce = true;
+            }
+        });
+
+        checkoutDate.setOnClickListener(v -> {
+            selectedEditText = checkoutDate;
+            showDatePickerDialog(checkoutDate);
+            hideKeyboard();
+        });
+
+
+    }
+    private void showDatePickerDialog(EditText editText) {
+        // Create an instance of the DatePickerFragment class
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        // Set the RoomBookingFragment instance as the listener for date selection
+        datePickerFragment.setOnDateSetListener(this);
+        datePickerFragment.setEditText(editText);
+
+        // Show the date picker dialog
+        assert getFragmentManager() != null;
+        datePickerFragment.show(getFragmentManager(), "datePicker");
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        // Update selectedDate with the selected date
+        selectedDate.set(year, month, dayOfMonth);
+
+        // Format the selected date as "dd/MM/yyyy"
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String selectedDateString = sdf.format(selectedDate.getTime());
+
+        if (selectedEditText != null) {
+            selectedEditText.setText(selectedDateString);
+
+            // Check if checkout date is before check-in date
+            if (selectedEditText == checkoutDate) {
+                Calendar checkOutDateCalendar = Calendar.getInstance();
+                checkOutDateCalendar.set(year, month, dayOfMonth);
+                if (checkOutDateCalendar.before(selectedDate)) {
+                    // Set checkout date to check-in date + 1 day
+                    selectedDate.add(Calendar.DAY_OF_MONTH, 1);
+                    checkoutDate.setText(sdf.format(selectedDate.getTime()));
+                }
+            }
+        }
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(checkInDate.getWindowToken(), 0);
+    }
+
+
 }

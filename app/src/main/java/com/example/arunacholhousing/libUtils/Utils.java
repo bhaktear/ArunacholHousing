@@ -32,9 +32,21 @@ public class Utils {
     }
 
     public static String makeURL(String urlPostfix){
-        String domain = "https://euser.info.bd/android-parcel-delivery/";
+        String domain = "https://euser.info.bd/arunachol/";
         String url = domain + urlPostfix;
         return url;
+    }
+
+    public static Map<String, String> getAuthData(Context context) {
+        Map<String, String> authData = new HashMap<>();
+        SharedPreferences sharedPreferences = context.getSharedPreferences("auth", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+        String user_id = sharedPreferences.getString("user_id","");
+        if (!token.isEmpty()) {
+            authData.put("token",token);
+            authData.put("user_id",user_id);
+        }
+        return authData;
     }
 
     public static Map<String, String> getAuth(Context context){
