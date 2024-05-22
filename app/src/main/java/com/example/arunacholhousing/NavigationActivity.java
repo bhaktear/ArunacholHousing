@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
@@ -70,13 +71,13 @@ public class NavigationActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int selectedItemId = item.getItemId();
-                Log.d("TAG","id:" + item.toString());
+                //Log.d("TAG","id:" + item.toString());
                 if (selectedItemId== 1000) { //for logout
                     performLogout();
                 }else if (isDynamicMenuItem(selectedItemId)){
                     handleDynamicMenuItemClick(selectedItemId);
                 }else{
-                    Log.d("TAG","static");
+                    //Log.d("TAG","static");
                     handleStaticMenuItemClick(selectedItemId);
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -87,18 +88,22 @@ public class NavigationActivity extends AppCompatActivity {
 
 
 
+
     private void handleStaticMenuItemClick(int itemId) {
-        Log.d("TAG","menuItem- " + itemId);
-        /*
-        switch (itemId) {
-            //case R.id.optBooking:
-                // Handle booking menu item click
-                //loadDefaultFragment(); // Example: Load default fragment for booking
-                //break;
+        //Log.d("TAG","menuItem- " + itemId);
+        //Log.d("TAG","resourceID: " + R.id.optBooking);
+
+        if(itemId == R.id.optBooking){
+            loadDynamicFragment("com.example.arunacholhousing.RoomBookingFragment");
+        }else if(itemId == R.id.optLogin){
+            //Toast.makeText(NavigationActivity.this,"Login Menu",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(NavigationActivity.this,LoginActivity.class);
+            startActivity(intent);
+        }else if(itemId == R.id.optReg){
+            //Toast.makeText(NavigationActivity.this,"Reg Menu",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(NavigationActivity.this,RegisterActivity.class);
+            startActivity(intent);
         }
-
-         */
-
     }
 
     private void handleDynamicMenuItemClick(int itemId) {
@@ -157,12 +162,13 @@ public class NavigationActivity extends AppCompatActivity {
         //boolean status = false;
         String url = Utils.makeURL("api/check_login.php");
         Map<String, String> authData = Utils.getAuthData(this);
+        //Log.d("TAG","authData: " + authData);
         OkHttpUtils okHttpUtils = new OkHttpUtils();
-        okHttpUtils.getRequest(url, new OkHttpUtils.ResponseCallback() {
+        okHttpUtils.postRequest(url, authData, new OkHttpUtils.ResponseCallback() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                   int err = response.getInt("err");
+                    int err = response.getInt("err");
                     boolean isLoggedIn = (err == 0);
                     handleLoginStatus(isLoggedIn);
                 }catch (Exception e){
@@ -180,6 +186,7 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
     private void handleLoginStatus(boolean isLoggedIn) {
+        //Log.d("TAG","isLogged: " + isLoggedIn);
         if (isLoggedIn) {
             fetchMenuData();
         }else{
@@ -212,6 +219,7 @@ public class NavigationActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                navigationView.getMenu().clear();
                                 populateNavigationView(data);
                                 updateHeaderTitle(user_id);
                             }
@@ -254,7 +262,6 @@ public class NavigationActivity extends AppCompatActivity {
 
                 //int iconResId = getResources().getIdentifier(icon, "drawable", getPackageName());
                 menuItems.add(new MenuItemData(sl,id, title, icon, className));
-
 
                 // Add menu item to NavigationView
                 //int itemId = View.generateViewId(); // Generate unique id for each item

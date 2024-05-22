@@ -111,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                             }
                         });
                     }catch (Exception e){
-
+                        Log.d("TAG","exp" + e.getMessage());
                     }
 
                 }

@@ -74,8 +74,8 @@ public class LoginActivity extends AppCompatActivity {
                                     //call dashboard
                                     Utils.alert(LoginActivity.this, msg, "Ok", "");
 
-                                    //Intent intent = new Intent(LoginActivity.this,NavigationActivity.class);
-                                    //startActivity(intent);
+                                    Intent intent = new Intent(LoginActivity.this,NavigationActivity.class);
+                                    startActivity(intent);
                                 } else {
                                     Utils.alert(LoginActivity.this, msg, "Ok", "");
                                 }
