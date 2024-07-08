@@ -69,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     private void addReg() {
         String user_name = name.getText().toString();
         String mobileVal = mobile.getText().toString();
-        String emailadd = email.getText().toString();
+        String emailAddress = email.getText().toString();
         String addr = address.getText().toString();
         String user_id= userID.getText().toString();
         String pass = password.getText().toString();
@@ -82,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             obj.put("user_name",user_name);
             obj.put("mobile",mobileVal);
             obj.put("address",addr);
-            obj.put("email",emailadd);
+            obj.put("email", emailAddress);
             obj.put("district",district);
             obj.put("thana",thanaVal);
             obj.put("user_id",user_id);

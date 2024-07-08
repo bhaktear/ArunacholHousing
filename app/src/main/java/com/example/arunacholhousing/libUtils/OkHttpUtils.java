@@ -36,19 +36,9 @@ public class OkHttpUtils {
         for (Map.Entry<String, String> entry : postData.entrySet()) {
             formBodyBuilder.add(entry.getKey(), entry.getValue());
         }
-
         RequestBody requestBody = formBodyBuilder.build();
-        Log.d("TAG","params"+ requestBody);
-
-         /*
-        //MediaType JSON = MediaType.get("application/json; charset=utf-8");
-        RequestBody requestBody = RequestBody.create(
-                okhttp3.MediaType.get("application/json; charset=utf-8"),
-                postData.toString()
-        );
-
-          */
-        Log.d("TAG","requestBody:" + postData.toString());
+        //Log.d("TAG","params"+ requestBody);
+        //Log.d("TAG","requestBody:" + postData.toString());
         Request request = new Request.Builder().url(url).post(requestBody).build();
         executeRequest(request,callback);
     }
@@ -62,23 +52,14 @@ public class OkHttpUtils {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Log.d("TAG","resp: "+ response);
+                //Log.d("TAG","resp: "+ response);
                 //int respCode = response.code();
                 if(response.isSuccessful()){
                     String resp = response.body().string();
-                    Log.d("TAG","resp: "+ resp);
+                    //Log.d("TAG","resp: "+ resp);
                     try {
                         JSONObject jsonObject = new JSONObject(resp);
                         callback.onResponse(jsonObject);
-                        //int err = obj.getInt("err");
-                        //String msg = obj.getString("msg");
-
-                        //JSONArray data = new JSONArray("data");
-
-                        //Log.d("TAG","resp: "+ obj);
-                        //Log.d("TAG","resp: "+ err);
-                        //Log.d("TAG","resp: "+ msg);
-                        //Log.d("TAG","resp: "+ data);
                     }catch (Exception e){
                         e.printStackTrace();
                         callback.onError("Error parsing JSON");

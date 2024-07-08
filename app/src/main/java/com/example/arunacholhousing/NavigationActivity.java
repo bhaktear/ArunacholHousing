@@ -205,17 +205,12 @@ public class NavigationActivity extends AppCompatActivity {
         okHttpUtils.postRequest(url, authData, new OkHttpUtils.ResponseCallback() {
             @Override
             public void onResponse(JSONObject resp) {
-                Log.d("TAG","menuRe - " + resp.toString());
                 try{
                     int err = resp.getInt("err");
                     String msg = resp.getString("msg");
                     String user_id = resp.getString("user_id");
-
-
                     if(err == 0){
                         JSONArray data = resp.getJSONArray("data");
-                        Log.d("TAG","msg-" + data);
-                        //headerName.setText(user_id);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

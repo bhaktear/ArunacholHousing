@@ -1,6 +1,5 @@
 package com.example.arunacholhousing;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 
@@ -40,13 +39,13 @@ public class AddRoomFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        roomTitle = view.findViewById(R.id.roomTitle);
+        roomTitle = view.findViewById(R.id.ListRoomTitle);
         roomType = view.findViewById(R.id.roomBookingType);
         roomFacilities = view.findViewById(R.id.roomFacilities);
         totalTravellers = view.findViewById(R.id.totalGuests);
         adultTravellers = view.findViewById(R.id.adultGuests);
         childTravellers = view.findViewById(R.id.chilidGuests);
-        roomPrice = view.findViewById(R.id.roomPrice);
+        roomPrice = view.findViewById(R.id.ListRoomPrice);
         discountPercent = view.findViewById(R.id.discountPercent);
         totalRoom = view.findViewById(R.id.totalRoom);
         submitBtn = view.findViewById(R.id.addRoomBtn);
